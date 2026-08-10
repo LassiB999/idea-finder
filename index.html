@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Idea Finder — Spot the need before anyone else</title>
+<meta name="description" content="Free, private idea-validation tool. Seed a niche, hunt 12 live free sources (Reddit, Google Trends, Etsy, Amazon reviews and more), then score every opportunity on demand, competition, monetization and passion. Runs 100% in your browser — no account, no backend." />
+<link rel="canonical" href="https://lassib999.github.io/idea-finder/" />
+
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png" />
+<link rel="icon" type="image/png" sizes="64x64" href="icons/icon-64.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png" />
+<meta name="theme-color" content="#110d1e" media="(prefers-color-scheme:dark)" />
+<meta name="theme-color" content="#0f8f6c" media="(prefers-color-scheme:light)" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Idea Finder" />
+<meta name="color-scheme" content="light dark" />
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Idea Finder" />
+<meta property="og:url" content="https://lassib999.github.io/idea-finder/" />
+<meta property="og:title" content="Idea Finder — Spot the need before anyone else" />
+<meta property="og:description" content="Seed a niche, hunt 12 live free sources, and score the opportunities you find. 100% in your browser — no account, no backend." />
+<meta property="og:image" content="https://lassib999.github.io/idea-finder/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Idea Finder — find what people need before you build it." />
+<meta property="og:locale" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Idea Finder — Spot the need before anyone else" />
+<meta name="twitter:description" content="Seed a niche, hunt 12 live free sources, and score the opportunities you find. 100% in your browser — no account, no backend." />
+<meta name="twitter:image" content="https://lassib999.github.io/idea-finder/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Idea Finder",
+  "url": "https://lassib999.github.io/idea-finder/",
+  "description": "Free browser-based idea-validation tool: hunt 12 live free sources for a niche, then capture and score opportunities on demand, competition, monetization and passion.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript. Works offline after first load.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "featureList": [
+    "12 pre-filled live research sources",
+    "7 search angles per source",
+    "Weighted opportunity scoring",
+    "JSON export",
+    "Offline-capable PWA",
+    "No account, no server — data stays on device"
+  ],
+  "isAccessibleForFree": true
+}
+</script>
+<style>
+:root{
+  --bg:#f6f7f5; --surface:#ffffff; --surface-2:#f0f2ee; --line:#e3e6df;
+  --ink:#14201b; --ink-2:#5a6b62; --ink-3:#8a9990;
+  --brand:#0f9d76; --brand-ink:#0a6b51; --brand-soft:#e4f4ee;
+  --amber:#e0951a; --rose:#d6455f; --sky:#2f7fd6;
+  --shadow:0 1px 2px rgba(20,32,27,.06),0 8px 24px rgba(20,32,27,.06);
+  --shadow-lg:0 12px 40px rgba(20,32,27,.14);
+  --r:16px; --r-sm:10px; --r-lg:22px;
+  --fs:15px;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,system-ui,sans-serif;
+}
+/* ---------- Purple dark theme (system default) ---------- */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#110d1e; --surface:#191330; --surface-2:#221a3d; --line:#2f2552;
+    --ink:#efeafd; --ink-2:#b7a9dc; --ink-3:#8a7cb0;
+    --brand:#a78bfa; --brand-ink:#c9b8ff; --brand-soft:#241a44;
+    --amber:#f0b429; --rose:#f472b6; --sky:#818cf8;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 34px rgba(0,0,0,.45);
+    --shadow-lg:0 18px 55px rgba(0,0,0,.6);
+  }
+}
+/* ---------- Purple dark theme (forced via toggle) ---------- */
+:root[data-theme="dark"]{
+  --bg:#110d1e; --surface:#191330; --surface-2:#221a3d; --line:#2f2552;
+  --ink:#efeafd; --ink-2:#b7a9dc; --ink-3:#8a7cb0;
+  --brand:#a78bfa; --brand-ink:#c9b8ff; --brand-soft:#241a44;
+  --amber:#f0b429; --rose:#f472b6; --sky:#818cf8;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 34px rgba(0,0,0,.45);
+  --shadow-lg:0 18px 55px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans); font-size:var(--fs); line-height:1.5;
+  background:var(--bg); color:var(--ink);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  padding-bottom:60px;
+}
+button{font-family:inherit}
+::selection{background:var(--brand-soft);color:var(--brand-ink)}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:40; backdrop-filter:saturate(1.4) blur(14px);
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  border-bottom:1px solid var(--line);
+}
+.topbar-in{max-width:1120px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-.02em;font-size:17px}
+.logo .mark{
+  width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
+  background:linear-gradient(150deg,var(--brand),var(--brand-ink));box-shadow:0 4px 12px color-mix(in srgb,var(--brand) 40%,transparent);
+}
+.logo .mark svg{width:17px;height:17px}
+.logo small{display:block;font-weight:500;font-size:11.5px;color:var(--ink-3);letter-spacing:0}
+.spacer{flex:1}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--line);color:var(--ink-2);font-size:13px;font-weight:600;
+  cursor:pointer;transition:.15s;
+}
+.pill:hover{color:var(--ink);border-color:var(--brand);transform:translateY(-1px)}
+.pill svg{width:15px;height:15px}
+.pill.icon{padding:8px;width:38px;justify-content:center}
+.pill.icon svg{width:17px;height:17px}
+
+/* ---------- Layout ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:26px 22px}
+.hero h1{font-size:30px;line-height:1.12;letter-spacing:-.03em;margin:6px 0 6px;font-weight:800}
+.hero p{margin:0 0 20px;color:var(--ink-2);font-size:15.5px;max-width:60ch}
+.grad{background:linear-gradient(115deg,var(--brand),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* Seed bar */
+.seedbar{
+  display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:9px 9px 9px 18px;box-shadow:var(--shadow);
+}
+.seedbar:focus-within{border-color:var(--brand);box-shadow:0 0 0 4px var(--brand-soft),var(--shadow)}
+.seedbar svg.s{width:19px;height:19px;color:var(--ink-3);flex:0 0 auto}
+.seedbar input{
+  flex:1;border:0;background:transparent;color:var(--ink);font-size:16.5px;font-weight:500;outline:none;padding:9px 2px;
+}
+.seedbar input::placeholder{color:var(--ink-3)}
+.btn{
+  border:0;border-radius:14px;padding:12px 20px;font-weight:700;font-size:14.5px;cursor:pointer;
+  background:linear-gradient(150deg,var(--brand),var(--brand-ink));color:#fff;transition:.15s;white-space:nowrap;
+  box-shadow:0 4px 14px color-mix(in srgb,var(--brand) 34%,transparent);
+}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:var(--surface-2);color:var(--ink);box-shadow:none;border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--brand)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{
+  padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);
+  font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer;transition:.14s;
+}
+.chip:hover{border-color:var(--brand);color:var(--brand-ink);background:var(--brand-soft)}
+
+/* Search-angle bar */
+.angles-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.angles-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);flex:0 0 auto}
+.angles{display:flex;flex-wrap:wrap;gap:8px}
+.angle{
+  display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--line);font-size:13px;font-weight:650;color:var(--ink-2);
+  cursor:pointer;transition:.14s;user-select:none;
+}
+.angle:hover{border-color:var(--brand);color:var(--ink)}
+.angle.on{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--brand) 34%,transparent)}
+:root[data-theme="dark"] .angle.on,:root:not([data-theme="light"]) .angle.on{color:#160f28}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .angle.on{color:#160f28}}
+
+/* Section head */
+.sec{margin-top:34px}
+.sec-h{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+.sec-h h2{font-size:19px;letter-spacing:-.02em;margin:0;font-weight:750}
+.sec-h .count{font-size:13px;color:var(--ink-3);font-weight:600}
+.sec-h .hint{margin-left:auto;font-size:12.5px;color:var(--ink-3)}
+
+/* Hunt grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
+.src{
+  display:flex;flex-direction:column;gap:9px;padding:15px;border-radius:var(--r);
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);
+  text-decoration:none;color:inherit;transition:.16s;cursor:pointer;position:relative;overflow:hidden;
+}
+.src:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:color-mix(in srgb,var(--brand) 45%,var(--line))}
+.src::after{content:"";position:absolute;inset:0 0 auto auto;width:70px;height:70px;
+  background:radial-gradient(circle at top right,color-mix(in srgb,var(--sicon) 22%,transparent),transparent 70%);pointer-events:none}
+.src .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;flex:0 0 auto;
+  background:var(--sicon);font-weight:800;font-size:16px;box-shadow:0 4px 10px color-mix(in srgb,var(--sicon) 35%,transparent)}
+.src .nm{font-weight:700;font-size:15px;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.src .go{margin-left:auto;color:var(--ink-3);transition:.15s}
+.src:hover .go{color:var(--brand);transform:translate(2px,-2px)}
+.src .ds{font-size:12.8px;color:var(--ink-2);line-height:1.4}
+.src .tag{font-size:11px;font-weight:700;color:var(--sicon);text-transform:uppercase;letter-spacing:.04em}
+.src.disabled{opacity:.5;pointer-events:none}
+
+/* Capture / Ideas */
+.two{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start}
+@media(max-width:820px){.two{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px}
+.card h3{margin:0 0 4px;font-size:15.5px;letter-spacing:-.01em}
+.card .sub{margin:0 0 14px;font-size:12.8px;color:var(--ink-3)}
+label.f{display:block;font-size:12px;font-weight:700;color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 6px}
+input.t,textarea.t,select.t{
+  width:100%;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:11px;
+  padding:11px 13px;font-size:14.5px;font-family:inherit;outline:none;transition:.15s;
+}
+textarea.t{resize:vertical;min-height:64px}
+input.t:focus,textarea.t:focus,select.t:focus{border-color:var(--brand);background:var(--surface);box-shadow:0 0 0 3px var(--brand-soft)}
+
+.slider{margin:10px 0 2px}
+.slider .row{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:3px}
+.slider .row b{color:var(--ink)}
+.slider .row .v{font-weight:800;color:var(--brand-ink)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:var(--surface-2);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:var(--brand);cursor:pointer;box-shadow:0 2px 6px color-mix(in srgb,var(--brand) 45%,transparent);border:3px solid var(--surface)}
+input[type=range]#w_comp::-webkit-slider-thumb{background:var(--rose)}
+
+/* Ideas board */
+.board{display:flex;flex-direction:column;gap:11px}
+.toolbar{display:flex;gap:8px;align-items:center;margin-bottom:4px;flex-wrap:wrap}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;color:var(--ink-2);font-weight:650;font-size:12.5px;padding:6px 11px;border-radius:8px;cursor:pointer}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.idea{
+  display:grid;grid-template-columns:52px 1fr auto;gap:14px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 15px;box-shadow:var(--shadow);transition:.15s;
+}
+.idea:hover{border-color:color-mix(in srgb,var(--brand) 35%,var(--line))}
+.score{
+  width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-weight:850;font-size:19px;color:#fff;flex:0 0 auto;
+  background:conic-gradient(var(--sc) calc(var(--p)*1%),var(--surface-2) 0);position:relative
+}
+.score span{position:absolute;inset:4px;border-radius:11px;background:var(--sc);display:grid;place-items:center;color:#fff}
+.idea .body h4{margin:0 0 3px;font-size:15px;letter-spacing:-.01em}
+.idea .body p{margin:0;font-size:13px;color:var(--ink-2);line-height:1.4}
+.idea .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.mtag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:var(--surface-2);color:var(--ink-2)}
+.mtag.src{background:var(--brand-soft);color:var(--brand-ink)}
+.idea .acts{display:flex;flex-direction:column;gap:6px}
+.iact{border:1px solid var(--line);background:var(--surface);color:var(--ink-3);width:32px;height:30px;border-radius:9px;cursor:pointer;display:grid;place-items:center;transition:.14s}
+.iact:hover{color:var(--rose);border-color:var(--rose)}
+.iact.up:hover{color:var(--brand);border-color:var(--brand)}
+.bars{display:flex;gap:3px;margin-top:8px}
+.bar{height:4px;border-radius:3px;flex:1;background:var(--surface-2);position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0;width:var(--w);background:var(--bc);border-radius:3px}
+
+.empty{text-align:center;padding:46px 20px;color:var(--ink-3)}
+.empty svg{width:44px;height:44px;opacity:.5;margin-bottom:10px}
+.empty b{color:var(--ink-2);display:block;font-size:15px;margin-bottom:4px}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
+  background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:12px;font-weight:650;font-size:13.5px;
+  box-shadow:var(--shadow-lg);z-index:80;transition:.25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.foot{max-width:1120px;margin:30px auto 0;padding:0 22px;color:var(--ink-3);font-size:12.5px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--ink-3)}
+@media(max-width:560px){.hero h1{font-size:25px}.seedbar{flex-wrap:wrap}.btn{width:100%}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="logo">
+      <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z"/></svg></span>
+      <div>Idea Finder<small>Spot the need before anyone else</small></div>
+    </div>
+    <div class="spacer"></div>
+    <button class="pill icon" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme"></button>
+    <button class="pill" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>Export</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>Find <span class="grad">what people need</span><br>before you build it.</h1>
+    <p>Seed a niche, hunt across free live sources, capture the pain points and gaps you spot — then let the opportunity score tell you what's actually worth building.</p>
+  </div>
+
+  <div class="seedbar">
+    <svg class="s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="seed" placeholder="Enter a niche, audience or topic…  e.g. busy freelancers, wedding budgeting, home gym" autocomplete="off" />
+    <button class="btn" id="huntBtn">Hunt ideas →</button>
+  </div>
+  <div class="chips" id="examples"></div>
+
+  <div class="sec">
+    <div class="sec-h">
+      <h2>Hunt sources</h2><span class="count" id="srcFor"></span>
+      <span class="hint">Opens a pre-filled search in a new tab — real, live signal</span>
+    </div>
+    <div class="angles-row">
+      <span class="angles-label">Search angle</span>
+      <div class="angles" id="angles"></div>
+    </div>
+    <div class="grid" id="sources"></div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-h"><h2>Capture &amp; score</h2><span class="hint">Everything stays on your device</span></div>
+    <div class="two">
+      <div class="card" id="captureCard">
+        <h3>New opportunity</h3>
+        <p class="sub">Log a gap or pain point you found while hunting.</p>
+        <label class="f">Idea / need</label>
+        <input class="t" id="i_title" placeholder="e.g. Simple debt-payoff tracker for couples" />
+        <label class="f">Note (who + what pain)</label>
+        <textarea class="t" id="i_note" placeholder="Spotted in r/personalfinance — people want one shared sheet, not an app subscription."></textarea>
+        <label class="f">Found via</label>
+        <select class="t" id="i_source"></select>
+
+        <div class="slider"><div class="row"><b>Demand</b> <span class="v" id="l_dem">6</span></div><input type="range" id="w_dem" min="1" max="10" value="6"></div>
+        <div class="slider"><div class="row"><b>Low competition</b> <span class="v" id="l_comp">5</span></div><input type="range" id="w_comp" min="1" max="10" value="5"></div>
+        <div class="slider"><div class="row"><b>Monetization</b> <span class="v" id="l_mon">6</span></div><input type="range" id="w_mon" min="1" max="10" value="6"></div>
+        <div class="slider"><div class="row"><b>Your passion</b> <span class="v" id="l_pas">7</span></div><input type="range" id="w_pas" min="1" max="10" value="7"></div>
+
+        <button class="btn" id="saveBtn" style="width:100%;margin-top:16px">Save opportunity</button>
+      </div>
+
+      <div>
+        <div class="toolbar">
+          <div class="seg" id="sortSeg">
+            <button data-s="score" class="on">Top score</button>
+            <button data-s="new">Newest</button>
+            <button data-s="demand">Demand</button>
+          </div>
+          <span class="spacer" style="flex:1"></span>
+          <span class="count" id="ideaCount"></span>
+        </div>
+        <div class="board" id="board"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <span>Idea Finder</span><span class="dot"></span>
+  <span>100% local · no account · your data never leaves this device</span><span class="dot"></span>
+  <span id="savedNote">Auto-saved</span>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={
+  get(){try{return JSON.parse(localStorage.getItem('idea-finder-v1'))||[]}catch(e){return[]}},
+  set(v){localStorage.setItem('idea-finder-v1',JSON.stringify(v))}
+};
+let ideas=store.get();
+let sortMode='score';
+
+/* ---------- Hunt sources: each builds a live pre-filled search URL ---------- */
+const SOURCES=[
+  {id:'reddit', nm:'Reddit', color:'#ff4500', tag:'Pain points', ds:'Real complaints & "I wish there was…" threads.',
+    url:q=>`https://www.reddit.com/search/?q=${e(q)}&sort=relevance`},
+  {id:'trends', nm:'Google Trends', color:'#2f7fd6', tag:'Demand curve', ds:'Is interest rising, flat, or fading?',
+    url:q=>`https://trends.google.com/trends/explore?q=${e(q)}`},
+  {id:'answer', nm:'AlsoAsked', color:'#7c4dff', tag:'Questions', ds:'What people actually ask around this topic.',
+    url:q=>`https://alsoasked.com/search?term=${e(q)}`},
+  {id:'suggest', nm:'Google Suggest', color:'#0f9d76', tag:'Autocomplete', ds:'Autocomplete = high-volume real queries.',
+    url:q=>`https://www.google.com/search?q=${e(q+' ')}`},
+  {id:'etsy', nm:'Etsy', color:'#f1641e', tag:'Digital sales', ds:'What people already pay for — with reviews.',
+    url:q=>`https://www.etsy.com/search?q=${e(q)}`},
+  {id:'amazon', nm:'Amazon', color:'#ff9900', tag:'Reviews', ds:'1-star reviews are a product roadmap.',
+    url:q=>`https://www.amazon.com/s?k=${e(q)}`},
+  {id:'pinterest', nm:'Pinterest', color:'#e60023', tag:'Visual demand', ds:'What gets saved = what people want.',
+    url:q=>`https://www.pinterest.com/search/pins/?q=${e(q)}`},
+  {id:'youtube', nm:'YouTube', color:'#ff0000', tag:'How-to gaps', ds:'High views + old videos = a content gap.',
+    url:q=>`https://www.youtube.com/results?search_query=${e(q)}`},
+  {id:'ph', nm:'Product Hunt', color:'#da552f', tag:'Competitors', ds:'Who is already building near this?',
+    url:q=>`https://www.producthunt.com/search?q=${e(q)}`},
+  {id:'quora', nm:'Quora', color:'#b92b27', tag:'Deep needs', ds:'Long-form problems people describe in detail.',
+    url:q=>`https://www.quora.com/search?q=${e(q)}`},
+  {id:'gumroad', nm:'Gumroad', color:'#ff90e8', tag:'Info products', ds:'Digital products & their price points.',
+    url:q=>`https://gumroad.com/search?query=${e(q)}`},
+  {id:'appstore', nm:'App Store', color:'#0a84ff', tag:'App gaps', ds:'Low-rating apps in a busy category = opening.',
+    url:q=>`https://www.google.com/search?q=${e(q+' app site:apps.apple.com')}`}
+];
+const e=s=>encodeURIComponent((s||'').trim());
+
+const EXAMPLES=['busy freelancers','wedding budgeting','home gym setup','meal prep for families','side hustle bookkeeping','pet owners','remote team rituals','small Etsy shops'];
+
+/* ---------- Search angles: rewrite the query per intent ---------- */
+const MARKET=new Set(['etsy','amazon','pinterest','ph','gumroad','appstore']);
+const ANGLES=[
+  {id:'raw',   emo:'🎯', label:'Raw',          wrap:q=>q,                       markets:true,  tip:'the plain niche'},
+  {id:'pain',  emo:'😖', label:'Complaints',   wrap:q=>`${q} problems`,         markets:false, tip:'pain points people vent about'},
+  {id:'alt',   emo:'🔀', label:'Alternatives', wrap:q=>`${q} alternative`,      markets:true,  tip:'people hunting a better option'},
+  {id:'best',  emo:'⭐', label:'Best / Top',    wrap:q=>`best ${q}`,             markets:true,  tip:'what already wins — and its gaps'},
+  {id:'how',   emo:'🛠️', label:'How-to',        wrap:q=>`how to ${q}`,           markets:false, tip:'jobs people are trying to do'},
+  {id:'cheap', emo:'💸', label:'Cheap / Free',  wrap:q=>`free ${q}`,             markets:true,  tip:'unmet demand at low price'},
+  {id:'tpl',   emo:'📄', label:'Template',      wrap:q=>`${q} template`,         markets:true,  tip:'productized, sellable formats'},
+];
+let angleIdx=0;
+function q4(source){
+  const seed=$('#seed').value.trim(); if(!seed) return '';
+  const a=ANGLES[angleIdx];
+  return (MARKET.has(source.id) && !a.markets) ? seed : a.wrap(seed);
+}
+function renderAngles(){
+  const box=$('#angles'); box.innerHTML='';
+  ANGLES.forEach((a,i)=>{
+    const c=document.createElement('button');
+    c.className='angle'+(i===angleIdx?' on':''); c.title=a.tip;
+    c.innerHTML=`<span>${a.emo}</span>${a.label}`;
+    c.onclick=()=>{angleIdx=i;renderAngles();renderSources();};
+    box.appendChild(c);
+  });
+}
+
+/* ---------- Render hunt grid ---------- */
+function renderSources(){
+  const q=$('#seed').value.trim();
+  const ang=ANGLES[angleIdx];
+  $('#srcFor').textContent = q ? (angleIdx? `· "${ang.wrap(q)}"` : `· "${q}"`) : '';
+  const grid=$('#sources'); grid.innerHTML='';
+  SOURCES.forEach(s=>{
+    const eq=q4(s);
+    const a=document.createElement(q?'a':'div');
+    a.className='src'+(q?'':' disabled');
+    a.style.setProperty('--sicon',s.color);
+    if(q){a.href=s.url(eq);a.target='_blank';a.rel='noopener';a.title=`Search "${eq}" on ${s.nm}`;}
+    a.innerHTML=`
+      <div style="display:flex;align-items:center;gap:10px;width:100%">
+        <div class="ico">${s.nm[0]}</div>
+        <div style="min-width:0">
+          <div class="nm">${s.nm}</div>
+          <div class="tag">${s.tag}</div>
+        </div>
+        <svg class="go" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+      </div>
+      <div class="ds">${s.ds}</div>`;
+    grid.appendChild(a);
+  });
+  // populate source select
+  const sel=$('#i_source');const cur=sel.value;
+  sel.innerHTML='<option value="">— pick a source —</option>'+SOURCES.map(s=>`<option>${s.nm}</option>`).join('')+'<option>Own idea</option>';
+  sel.value=cur;
+}
+
+function renderExamples(){
+  const box=$('#examples');box.innerHTML='';
+  EXAMPLES.forEach(x=>{const c=document.createElement('button');c.className='chip';c.textContent=x;
+    c.onclick=()=>{$('#seed').value=x;renderSources();$('#seed').focus();};box.appendChild(c);});
+}
+
+/* ---------- Scoring ---------- */
+function opp(i){ // weighted opportunity score 0-100
+  const s=(i.dem*0.32 + i.comp*0.24 + i.mon*0.26 + i.pas*0.18);
+  return Math.round(s*10);
+}
+function scColor(v){return v>=75?'#0f9d76':v>=55?'#e0951a':v>=35?'#e67e22':'#d6455f';}
+
+function renderBoard(){
+  const b=$('#board');
+  let list=[...ideas];
+  if(sortMode==='score')list.sort((a,c)=>opp(c)-opp(a));
+  if(sortMode==='new')list.sort((a,c)=>c.t-a.t);
+  if(sortMode==='demand')list.sort((a,c)=>c.dem-a.dem);
+  $('#ideaCount').textContent=ideas.length?`${ideas.length} saved`:'';
+  if(!list.length){
+    b.innerHTML=`<div class="empty card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1V17h6v-.2c0-.8.4-1.6 1-2.1A7 7 0 0 0 12 2Z"/></svg><b>No opportunities yet</b>Hunt a niche above, then capture what you find. Ideas rank themselves here.</div>`;
+    return;
+  }
+  b.innerHTML='';
+  list.forEach(i=>{
+    const v=opp(i),c=scColor(v);
+    const el=document.createElement('div');el.className='idea';
+    el.innerHTML=`
+      <div class="score" style="--sc:${c};--p:${v}"><span>${v}</span></div>
+      <div class="body">
+        <h4>${esc(i.title)}</h4>
+        ${i.note?`<p>${esc(i.note)}</p>`:''}
+        <div class="meta">
+          ${i.source?`<span class="mtag src">${esc(i.source)}</span>`:''}
+          <span class="mtag">Demand ${i.dem}</span>
+          <span class="mtag">Comp ${i.comp}</span>
+          <span class="mtag">Money ${i.mon}</span>
+          <span class="mtag">Passion ${i.pas}</span>
+        </div>
+        <div class="bars">
+          <div class="bar" style="--bc:#0f9d76;--w:${i.dem*10}%"><i></i></div>
+          <div class="bar" style="--bc:#2f7fd6;--w:${i.comp*10}%"><i></i></div>
+          <div class="bar" style="--bc:#e0951a;--w:${i.mon*10}%"><i></i></div>
+          <div class="bar" style="--bc:#7c4dff;--w:${i.pas*10}%"><i></i></div>
+        </div>
+      </div>
+      <div class="acts">
+        <button class="iact up" title="Nudge demand +1" data-up="${i.id}"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
+        <button class="iact" title="Delete" data-del="${i.id}"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+      </div>`;
+    b.appendChild(el);
+  });
+}
+const esc=s=>(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+
+/* ---------- Actions ---------- */
+function save(){
+  const title=$('#i_title').value.trim();
+  if(!title){toast('Give the idea a name first');$('#i_title').focus();return;}
+  ideas.push({
+    id:Date.now()+''+Math.random().toString(36).slice(2,6), t:Date.now(),
+    title, note:$('#i_note').value.trim(), source:$('#i_source').value,
+    dem:+$('#w_dem').value, comp:+$('#w_comp').value, mon:+$('#w_mon').value, pas:+$('#w_pas').value
+  });
+  store.set(ideas);renderBoard();
+  $('#i_title').value='';$('#i_note').value='';
+  ['w_dem','w_comp','w_mon','w_pas'].forEach(id=>{$('#'+id).value=({w_dem:6,w_comp:5,w_mon:6,w_pas:7})[id];});
+  syncLabels();
+  toast('Opportunity saved ✓');
+}
+function del(id){ideas=ideas.filter(i=>i.id!==id);store.set(ideas);renderBoard();toast('Removed');}
+function nudge(id){const i=ideas.find(x=>x.id===id);if(i){i.dem=Math.min(10,i.dem+1);store.set(ideas);renderBoard();}}
+
+let tT;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),1900);}
+
+function exportData(){
+  if(!ideas.length){toast('Nothing to export yet');return;}
+  const rows=[['Score','Idea','Note','Source','Demand','LowCompetition','Monetization','Passion']];
+  [...ideas].sort((a,c)=>opp(c)-opp(a)).forEach(i=>rows.push([opp(i),i.title,i.note,i.source,i.dem,i.comp,i.mon,i.pas]));
+  const csv=rows.map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='idea-finder-opportunities.csv';a.click();
+  toast('Exported CSV ✓');
+}
+
+/* ---------- Wiring ---------- */
+function syncLabels(){
+  $('#l_dem').textContent=$('#w_dem').value;$('#l_comp').textContent=$('#w_comp').value;
+  $('#l_mon').textContent=$('#w_mon').value;$('#l_pas').textContent=$('#w_pas').value;
+}
+['w_dem','w_comp','w_mon','w_pas'].forEach(id=>$('#'+id).addEventListener('input',syncLabels));
+$('#huntBtn').onclick=renderSources;
+$('#seed').addEventListener('keydown',e=>{if(e.key==='Enter')renderSources();});
+$('#seed').addEventListener('input',()=>{clearTimeout(window._d);window._d=setTimeout(renderSources,250);});
+$('#saveBtn').onclick=save;
+$('#exportBtn').onclick=exportData;
+$('#board').addEventListener('click',e=>{
+  const d=e.target.closest('[data-del]');const u=e.target.closest('[data-up]');
+  if(d)del(d.dataset.del); if(u)nudge(u.dataset.up);
+});
+$('#sortSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  $$('#sortSeg button').forEach(x=>x.classList.remove('on'));b.classList.add('on');sortMode=b.dataset.s;renderBoard();});
+
+/* ---------- Theme (purple dark) ---------- */
+const SUN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const MOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6.4 6.4 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+const root=document.documentElement;
+function applyTheme(t){
+  root.setAttribute('data-theme',t);
+  localStorage.setItem('idea-finder-theme',t);
+  $('#themeBtn').innerHTML = t==='dark' ? SUN : MOON;
+  const tc=document.querySelector('meta[name="theme-color"]:not([media])');
+}
+function initTheme(){ applyTheme(localStorage.getItem('idea-finder-theme') || 'dark'); }
+$('#themeBtn').onclick=()=>applyTheme(root.getAttribute('data-theme')==='dark'?'light':'dark');
+initTheme();
+
+/* ---------- Offline (only when served over http/localhost) ---------- */
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+/* ---------- Init ---------- */
+renderExamples();renderAngles();renderSources();renderBoard();syncLabels();
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "Idea Finder",
+  "short_name": "Idea Finder",
+  "description": "Spot the need before anyone else — seed a niche, hunt free live sources, capture and score opportunities.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#110d1e",
+  "theme_color": "#110d1e",
+  "categories": ["productivity", "business"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
