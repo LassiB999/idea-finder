@@ -1,0 +1,4 @@
+# Cloudflare Pages redirect rules.
+# The site moved off the GitHub Pages project path, so anything still asking
+# for /idea-finder/* is sent to the equivalent path at the root.
+/idea-finder/*  /:splat  301

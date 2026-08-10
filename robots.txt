@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lassib999.github.io/idea-finder/sitemap.xml
+Sitemap: https://ideafinder.pages.dev/sitemap.xml

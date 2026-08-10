@@ -2,7 +2,7 @@
 
 **Spot the need before anyone else.** Seed a niche, hunt 12 free live sources, capture what you find, and let a weighted score tell you what's actually worth building.
 
-🔗 **Live:** https://lassib999.github.io/idea-finder/
+🔗 **Live:** https://ideafinder.pages.dev/
 
 ## What it does
 
