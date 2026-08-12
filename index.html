@@ -130,8 +130,11 @@ button{font-family:inherit}
    in a narrow column, but stays capped — full-bleed would stretch the source
    cards into unreadable letterboxes. */
 .wrap{max-width:var(--maxw);margin:0 auto;padding:26px 22px}
-.hero h1{font-size:30px;line-height:1.12;letter-spacing:-.03em;margin:6px 0 6px;font-weight:800}
-.hero p{margin:0 0 20px;color:var(--ink-2);font-size:15.5px;max-width:60ch}
+/* Centred so the headline reads as the page's opening statement rather than a
+   left-hugging label, and sized up — it was losing to the seed bar below it. */
+.hero{text-align:center;margin:10px 0 24px}
+.hero h1{font-size:38px;line-height:1.1;letter-spacing:-.03em;margin:6px 0 12px;font-weight:800}
+.hero p{margin:0 auto 22px;color:var(--ink-2);font-size:17.5px;line-height:1.55;max-width:60ch}
 .grad{background:linear-gradient(115deg,var(--brand),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* Seed bar */
@@ -155,7 +158,19 @@ button{font-family:inherit}
 .btn.ghost{background:var(--surface-2);color:var(--ink);box-shadow:none;border:1px solid var(--line)}
 .btn.ghost:hover{border-color:var(--brand)}
 
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+/* Numbered flow under the seed bar. Sits on one line when there is room and
+   wraps to stacked rows when there is not — never scrolls sideways. */
+.steps{
+  list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;
+  margin:16px 0 0;padding:0;color:var(--ink-2);font-size:13.5px;font-weight:500;
+}
+.steps li{display:flex;align-items:center;gap:8px}
+.steps b{
+  display:grid;place-items:center;width:21px;height:21px;border-radius:999px;flex:0 0 auto;
+  background:var(--brand-soft);color:var(--brand-ink);font-size:12px;font-weight:800;
+}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;justify-content:center}
 .chip{
   padding:7px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);
   font-size:13px;font-weight:600;color:var(--ink-2);cursor:pointer;transition:.14s;
@@ -266,7 +281,14 @@ input[type=range]#w_comp::-webkit-slider-thumb{background:var(--rose)}
 
 .foot{max-width:var(--maxw);margin:30px auto 0;padding:0 22px;color:var(--ink-3);font-size:12.5px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--ink-3)}
-@media(max-width:560px){.hero h1{font-size:25px}.seedbar{flex-wrap:wrap}.btn{width:100%}}
+@media(max-width:560px){
+  .hero h1{font-size:29px}
+  .hero p{font-size:16px}
+  .seedbar{flex-wrap:wrap}
+  .btn{width:100%}
+  /* Stacked and left-aligned on phones — three centred rows read as a jumble. */
+  .steps{flex-direction:column;align-items:flex-start;gap:9px}
+}
 
 /* ---------- Wide monitors ----------
    Widen in steps rather than one jump, and grow the capture column with the
@@ -274,7 +296,7 @@ input[type=range]#w_comp::-webkit-slider-thumb{background:var(--rose)}
    source grid needs no help: auto-fill already adds columns as room appears. */
 @media(min-width:1400px){
   :root{--maxw:1320px}
-  .hero h1{font-size:34px}
+  .hero h1{font-size:44px}
   .two{grid-template-columns:380px 1fr}
   /* Fixed column counts that divide the 12 sources evenly. auto-fill would
      fit 5 here and leave a ragged 5+5+2; 4+4+4 and 6+6 stay balanced. */
@@ -282,7 +304,8 @@ input[type=range]#w_comp::-webkit-slider-thumb{background:var(--rose)}
 }
 @media(min-width:1750px){
   :root{--maxw:1560px}
-  .hero h1{font-size:38px}
+  .hero h1{font-size:50px}
+  .hero p{font-size:18.5px}
   .two{grid-template-columns:420px 1fr}
   .grid{grid-template-columns:repeat(6,1fr)}
 }
@@ -311,8 +334,17 @@ input[type=range]#w_comp::-webkit-slider-thumb{background:var(--rose)}
   <div class="seedbar">
     <svg class="s" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
     <input id="seed" placeholder="Enter a niche, audience or topic…  e.g. busy freelancers, wedding budgeting, home gym" autocomplete="off" />
-    <button class="btn" id="huntBtn">Hunt ideas →</button>
+    <button class="btn" id="huntBtn">Choose platform →</button>
   </div>
+
+  <!-- The two-step flow is not obvious on arrival: people typed a niche and
+       then waited for results that only appear once they pick a platform. -->
+  <ol class="steps">
+    <li><b>1</b> Type a niche or audience above</li>
+    <li><b>2</b> Click a platform below to open a live, pre-filled search</li>
+    <li><b>3</b> Capture what you find and score it</li>
+  </ol>
+
   <div class="chips" id="examples"></div>
 
   <div class="sec">
