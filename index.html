@@ -65,6 +65,7 @@
   --shadow-lg:0 12px 40px rgba(20,32,27,.14);
   --r:16px; --r-sm:10px; --r-lg:22px;
   --fs:15px;
+  --maxw:1120px;
   --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,system-ui,sans-serif;
 }
 /* ---------- Purple dark theme (system default) ---------- */
@@ -104,7 +105,7 @@ button{font-family:inherit}
   background:color-mix(in srgb,var(--bg) 82%,transparent);
   border-bottom:1px solid var(--line);
 }
-.topbar-in{max-width:1120px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:14px}
+.topbar-in{max-width:var(--maxw);margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:14px}
 .logo{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-.02em;font-size:17px}
 .logo .mark{
   width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto;
@@ -123,8 +124,12 @@ button{font-family:inherit}
 .pill.icon{padding:8px;width:38px;justify-content:center}
 .pill.icon svg{width:17px;height:17px}
 
-/* ---------- Layout ---------- */
-.wrap{max-width:1120px;margin:0 auto;padding:26px 22px}
+/* ---------- Layout ----------
+   One variable drives the page width so the bar, body and footer can never
+   drift apart. It steps up on wide monitors instead of stranding the content
+   in a narrow column, but stays capped — full-bleed would stretch the source
+   cards into unreadable letterboxes. */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:26px 22px}
 .hero h1{font-size:30px;line-height:1.12;letter-spacing:-.03em;margin:6px 0 6px;font-weight:800}
 .hero p{margin:0 0 20px;color:var(--ink-2);font-size:15.5px;max-width:60ch}
 .grad{background:linear-gradient(115deg,var(--brand),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -259,9 +264,28 @@ input[type=range]#w_comp::-webkit-slider-thumb{background:var(--rose)}
   box-shadow:var(--shadow-lg);z-index:80;transition:.25s;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.foot{max-width:1120px;margin:30px auto 0;padding:0 22px;color:var(--ink-3);font-size:12.5px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.foot{max-width:var(--maxw);margin:30px auto 0;padding:0 22px;color:var(--ink-3);font-size:12.5px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--ink-3)}
 @media(max-width:560px){.hero h1{font-size:25px}.seedbar{flex-wrap:wrap}.btn{width:100%}}
+
+/* ---------- Wide monitors ----------
+   Widen in steps rather than one jump, and grow the capture column with the
+   page so the form does not sit as a thin strip beside a huge board. The
+   source grid needs no help: auto-fill already adds columns as room appears. */
+@media(min-width:1400px){
+  :root{--maxw:1320px}
+  .hero h1{font-size:34px}
+  .two{grid-template-columns:380px 1fr}
+  /* Fixed column counts that divide the 12 sources evenly. auto-fill would
+     fit 5 here and leave a ragged 5+5+2; 4+4+4 and 6+6 stay balanced. */
+  .grid{grid-template-columns:repeat(4,1fr)}
+}
+@media(min-width:1750px){
+  :root{--maxw:1560px}
+  .hero h1{font-size:38px}
+  .two{grid-template-columns:420px 1fr}
+  .grid{grid-template-columns:repeat(6,1fr)}
+}
 </style>
 </head>
 <body>
